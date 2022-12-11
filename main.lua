@@ -51,11 +51,15 @@ function love.keypressed(key)
 end
 
 function love.update(dt)
+    -- scroll background by preset speed * dt, looping back to 0 after the looping point
     backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt)
         % BACKGROUND_LOOPING_POINT
         
+    -- scroll ground by preset speed * dt, looping back to 0 after the screen width passes
     groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt)
         % VIRTUAL_WIDTH
+
+    bird:update(dt)
 end
 
 function love.draw()
@@ -64,9 +68,11 @@ function love.draw()
     -- draw the background starting at top left (0, 0)
     love.graphics.draw(background, -backgroundScroll, 0)
 
-    -- draw the ground on top of the background, toward the bottom of the screen
+    -- draw the ground on top of the background, toward the bottom of the screen,
+    -- at its negative looping point
     love.graphics.draw(ground, -groundScroll, VIRTUAL_HEIGHT - 16)
 
+    -- render our bird to the screen using its own render logic
     bird:render()
 
     push:finish()
